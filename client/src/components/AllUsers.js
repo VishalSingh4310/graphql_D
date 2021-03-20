@@ -5,6 +5,17 @@ import { GET_POSTS } from "../graohql";
 import User from "./User";
 import Post from "./Post";
 import AddUser from "./AddUser";
+import { PlusSquareDotted } from "@styled-icons/bootstrap";
+import styled from "styled-components";
+
+const RedAdd = styled(PlusSquareDotted)`
+  height: 2rem;
+  margin-right: 0.5rem;
+`;
+const RedAddButton = styled(PlusSquareDotted)`
+  height: 1rem;
+  margin-right: 0.5rem;
+`;
 
 const AllUsers = ({ title, select }) => {
   const { error, loading, data, refetch } = useQuery(
@@ -31,7 +42,15 @@ const AllUsers = ({ title, select }) => {
 
         <AddUser title={title} refetch={refetch} />
       </div>
-      <div className="grid grid-cols-1 gap-4 px-4 mx-4 max-w-screen-2xl justify-center w-full sm:grid-cols-2 md:grid-cols-3 mb-8">
+      {title === "Posts" && (
+        <div className="max-w-screen-2xl w-11/12 py-4 mb-4">
+          <h1 className="text-3xl font-light">Hello Vishal</h1>
+          <p className="text-gray-400 mt-2">
+            Do you already know what you design today?
+          </p>
+        </div>
+      )}
+      <div className=" w-11/12 grid grid-cols-1 gap-4  max-w-screen-2xl justify-center  sm:grid-cols-2 md:grid-cols-3 mb-8">
         {title !== "Posts" &&
           data.users.map((user) => (
             <User
@@ -57,6 +76,16 @@ const AllUsers = ({ title, select }) => {
             />
           ))}
       </div>
+      {data.posts.length == 0 && (
+        <div className="flex items-center flex-col">
+          <button className="mt-4 p-2 rounded flex items-center">
+            <RedAdd />{" "}
+            <span className="hover:underline">
+              try adding some memories which you want people to know
+            </span>
+          </button>
+        </div>
+      )}
     </>
   );
 };

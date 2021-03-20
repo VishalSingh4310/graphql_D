@@ -16,7 +16,7 @@ function App() {
   };
   return (
     <ApolloProvider client={client}>
-      <div className="App flex flex-col items-center font-poppins max-w-screen-lg">
+      <div className="App flex flex-col items-center font-poppins ">
         <AllUsers select={selectHandler} title={select} />
       </div>
     </ApolloProvider>

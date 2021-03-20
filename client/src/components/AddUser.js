@@ -22,6 +22,7 @@ const AddUser = ({ title, refetch }) => {
     }
     await refetch();
   };
+
   const addUser = async (name, email) => {
     if (email !== "" && name !== "") {
       await createUser({

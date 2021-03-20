@@ -3,7 +3,7 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     fontFamily: {
-      poppins: ["poppins"],
+      poppins: ["Inter"],
     },
     extend: {},
   },

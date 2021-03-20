@@ -1,16 +1,23 @@
 import React, { useState } from "react";
-
+import { storage } from "../DB";
 const Modal = ({ title, toggle, addUser }) => {
   const [imgInput, setImgInput] = useState("");
   const [name, setName] = useState("");
   const [caption, setCaption] = useState("");
   const [loading, setLoading] = React.useState(false);
   const [image, setImage] = React.useState("");
+  const [imgPrev, setImgPrev] = React.useState("");
   const doneHandler = async () => {
     setLoading(true);
     if (title === "Posts") {
       if (image !== "" && name !== "" && caption !== "") {
-        await addUser(image, name, caption);
+        const uploadImage = await storage.ref(`images/${image.name}`);
+        await uploadImage.put(image).then((snapshot) => {
+          console.log("Uploaded a blob or file!");
+        });
+        await uploadImage
+          .getDownloadURL()
+          .then((url) => addUser(url, name, caption));
         setName("");
         setCaption("");
         setImage("");
@@ -26,7 +33,8 @@ const Modal = ({ title, toggle, addUser }) => {
   };
   const onImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
-      setImage(URL.createObjectURL(event.target.files[0]));
+      setImage(event.target.files[0]);
+      setImgPrev(URL.createObjectURL(event.target.files[0]));
     }
   };
 
@@ -108,9 +116,9 @@ const Modal = ({ title, toggle, addUser }) => {
                       <img
                         id="target"
                         src={
-                          image === ""
+                          imgPrev === ""
                             ? "https://arcticstartup.com/wp-content/themes/15zine/library/images/placeholders/placeholder-759x500@2x.png"
-                            : image
+                            : imgPrev
                         }
                         alt="wdc"
                         className="w-full object-cover"
