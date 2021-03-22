@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { storage } from "../DB";
+import { Oval } from "svg-loaders-react";
+
 const Modal = ({ title, toggle, addUser }) => {
   const [imgInput, setImgInput] = useState("");
   const [name, setName] = useState("");
@@ -7,21 +9,40 @@ const Modal = ({ title, toggle, addUser }) => {
   const [loading, setLoading] = React.useState(false);
   const [image, setImage] = React.useState("");
   const [imgPrev, setImgPrev] = React.useState("");
+  const [progress, setProgress] = React.useState(0);
   const doneHandler = async () => {
     setLoading(true);
     if (title === "Posts") {
       if (image !== "" && name !== "" && caption !== "") {
-        const uploadImage = await storage.ref(`images/${image.name}`);
-        await uploadImage.put(image).then((snapshot) => {
-          console.log("Uploaded a blob or file!");
-        });
-        await uploadImage
-          .getDownloadURL()
-          .then((url) => addUser(url, name, caption));
-        setName("");
-        setCaption("");
-        setImage("");
-        toggle(false);
+        let temp = false;
+        const uploadImage = storage.ref(`images/${image.name}`).put(image);
+
+        uploadImage.on(
+          "state_changed",
+          (snapshot) => {
+            setLoading(true);
+            var progress = Math.round(
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            );
+            setProgress(progress);
+          },
+          (error) => {
+            console.log(error);
+            // Handle unsuccessful uploads
+          },
+          () => {
+            uploadImage.snapshot.ref
+              .getDownloadURL()
+              .then(async (downloadURL) => {
+                await addUser(downloadURL, name, caption);
+                setName("");
+                setCaption("");
+                setImage("");
+                setLoading(false);
+                toggle(false);
+              });
+          }
+        );
       }
     } else {
       if (imgInput !== "" && name !== "") await addUser(name, imgInput);
@@ -29,6 +50,7 @@ const Modal = ({ title, toggle, addUser }) => {
       setImgInput("");
       toggle(false);
     }
+
     setLoading(false);
   };
   const onImageChange = (event) => {
@@ -54,11 +76,16 @@ const Modal = ({ title, toggle, addUser }) => {
           </span>
 
           <div
-            className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
+            className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full relative"
             role="dialog"
             aria-modal="true"
             aria-labelledby="modal-headline"
+            // style={{ borderTop: "5px solid red" }}
           >
+            <span
+              className="absolute block h-1 bg-green-600 left-0"
+              style={{ right: `${100 - progress}%` }}
+            ></span>
             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <div className="sm:flex sm:items-start">
                 <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
@@ -130,11 +157,21 @@ const Modal = ({ title, toggle, addUser }) => {
             </div>
             <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
               <button
+                disabled={loading}
                 type="button"
                 className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:w-auto sm:text-sm"
                 onClick={doneHandler}
               >
-                {loading ? "..." : "Post"}
+                {loading ? (
+                  <Oval
+                    style={{
+                      width: "1rem",
+                      height: "1rem",
+                    }}
+                  />
+                ) : (
+                  "Post"
+                )}
               </button>
               <button
                 type="button"

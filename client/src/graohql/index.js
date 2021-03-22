@@ -26,6 +26,15 @@ export const GET_POSTS = gql`
   }
 `;
 
+export const GET_USER = gql`
+  query user($email: String!) {
+    user(email: $email) {
+      name
+      email
+    }
+  }
+`;
+
 export const CREATE_POST = gql`
   mutation createPost(
     $post_img: String!

@@ -12,10 +12,10 @@ exports.Users = async () => {
   }
 };
 
-exports.FetchUser = async (_, { id }) => {
-  console.log("hello", id);
+exports.FetchUser = async (_, { email }) => {
+  console.log("hello", email);
   try {
-    const fetchUser = await User.findOne({ _id: id }).populate("postIds");
+    const fetchUser = await User.findOne({ email: email }).populate("postIds");
     return fetchUser;
   } catch (err) {
     throw err;

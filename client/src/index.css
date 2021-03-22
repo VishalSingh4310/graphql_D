@@ -36,3 +36,30 @@
     opacity: 1;
   }
 }
+.main_auth_2 {
+  grid-template-columns: 1fr 1fr;
+}
+.right_panel {
+  padding: 4rem;
+  flex: 2;
+
+  height: 100vh;
+}
+.main_auth {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .main_auth {
+    display: none;
+  }
+  .main_auth-1 {
+    display: none;
+  }
+  .main_auth_2 {
+    grid-template-columns: 1fr;
+  }
+  .right_panel {
+    padding: 2rem !important;
+  }
+}

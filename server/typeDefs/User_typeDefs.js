@@ -13,7 +13,7 @@ exports.UsertypeDefs = `
 
 exports.UserQuery = `
 users: [User!]
-user(id: ID!): User
+user(email: String!): User
 `;
 
 exports.UserMutation = `

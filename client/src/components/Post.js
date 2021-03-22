@@ -104,17 +104,17 @@ const Post = ({
             </div>
           </div>
           <div className=" mt-4 pb-4 text-capitalize text-gray-600 text-xs">
-            <div className="w-full flex items-center justify-between px-4">
+            <div className="w-full flex items-center justify-between pl-4">
               <div>
                 <span
-                  className="text-red-400 mr-2 text-xs cursor-pointer"
+                  className="text-red-400  text-xs cursor-pointer"
                   onClick={LikePost}
                 >
                   <RedHeart /> <strong>{likes}</strong>
                 </span>
-                <span className="text-blue-400 text-xs cursor-pointer">
+                {/* <span className="text-blue-400 text-xs cursor-pointer">
                   <RedChat /> <strong>{comments}</strong>
-                </span>
+                </span> */}
               </div>
               {/* <span className="text-gray-900 text-sm cursor-pointer">
                 <RedShare /> <strong>0</strong>

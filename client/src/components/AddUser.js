@@ -3,7 +3,13 @@ import { useMutation } from "@apollo/client";
 import { CREATE_POST, CREATE_USER } from "../graohql";
 import Modal from "./Modal";
 
-const AddUser = ({ title, refetch }) => {
+const AddUser = ({
+  title,
+  refetch,
+  onlyFunction,
+  openModal,
+  modalOperation,
+}) => {
   const [createPost, { error }] = useMutation(CREATE_POST);
   const [createUser, { error2 }] = useMutation(CREATE_USER);
   const [open, setOpen] = React.useState(false);
@@ -39,14 +45,31 @@ const AddUser = ({ title, refetch }) => {
       console.log("empty");
     }
   };
+
+  React.useEffect(() => {
+    console.log(openModal);
+    if (openModal == true && open === false) {
+      setOpen(true);
+    }
+  }, [openModal]);
+
+  React.useEffect(() => {
+    if (open === false && openModal === true) {
+      modalOperation(false);
+    }
+  }, [open]);
   return (
-    <div
-      className="rounded-full w-4 h-4 flex justify-center items-center bg-white cursor-pointer"
-      style={{ width: "40px", height: "40px" }}
-    >
-      <span className="text-3xl " onClick={() => setOpen(!open)}>
-        +
-      </span>
+    <>
+      {onlyFunction !== true && (
+        <div
+          className="rounded-full w-4 h-4 flex justify-center items-center bg-white cursor-pointer"
+          style={{ width: "40px", height: "40px" }}
+        >
+          <span className="text-3xl " onClick={() => setOpen(!open)}>
+            +
+          </span>
+        </div>
+      )}
       {open && (
         <Modal
           toggle={setOpen}
@@ -54,7 +77,7 @@ const AddUser = ({ title, refetch }) => {
           title={title}
         />
       )}
-    </div>
+    </>
   );
 };
 
